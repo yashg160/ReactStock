@@ -31,7 +31,6 @@ userRouter.route('/login')
                         });
                     }
                     else {
-                        console.log(success);
                         res.status(200);
                         res.statusMessage = 'ERR_NONE';
                         res.send({
@@ -118,29 +117,24 @@ userRouter.route('/pictures')
 
         User.findOne({
             accessToken: query.accessToken
-        }, (err, doc) => {
+        }, async(err, doc) => {
                 if (err) {
                     res.status(200);
                     res.send({ error: true, errorMessage: 'ERR_USER_PICTURES' });
                 }
                 else {
                     var pictureIds = doc.get('pictures');
+                    console.log(pictureIds[1]);
                     let pictures = [];
 
                     for (i = 0; i < pictureIds.length; i++) {
 
-                        Picture.findById(pictureIds[i], (err, pic) => {
-                            if (!err) {
-                                pictures.push({
-                                    content: pic.get('content'),
-                                    title: pic.get('title')
-                                });
-                            }
-                            else {
-                                res.status(200);
-                                res.send({error: true, errorMessage: 'ERR_PICTURE'})
-                            }
-                        });
+                        let pic = await Picture.findById(pictureIds[i]);
+
+                        pictures.push({
+                            content: pic.get('content'),
+                            title: pic.get('title')
+                        });                      
                     }
 
                     res.status(200);
