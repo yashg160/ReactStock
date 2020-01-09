@@ -42,7 +42,7 @@ userRouter.route('/login')
                                 familyName: success.get('name').family,
                                 imageUrl: success.get('imageUrl'),
                                 email: success.get('email'),
-                                pictures: success.get('pictures')
+                                //pictures: success.get('pictures')
                             }
                         });
                     }

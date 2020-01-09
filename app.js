@@ -6,6 +6,8 @@ var mongoose = require('mongoose');
 var config = require('./config');
 
 var userRouter = require('./routes/userRouter');
+var pictureRouter = require('./routes/pictureRouter');
+
 
 var app = express();
 
@@ -19,6 +21,7 @@ mongoose.connect(config.mongoUrl)
     .catch((err) => console.error('Failed to connect to server ', err));
 
 app.use('/user', userRouter);
+app.use('/picture', pictureRouter);
 
 app.all('/', (req, res, next) => {
     res.send({ message: 'This route is after /user. Create an endpoint.' });

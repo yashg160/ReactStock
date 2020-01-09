@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var PictureSchema = require('./Picture');
+
 var UserSchema = new Schema({
     googleId: String,
     name: {
