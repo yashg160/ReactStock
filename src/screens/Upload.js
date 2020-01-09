@@ -24,8 +24,9 @@ export default class Upload extends React.Component {
 
         this.state = {
             loading: true,
+            redirect: false,
             error: false,
-            user: this.props.location.state.user,
+            user: null,
             encodedImage: '',
             title: ''
         }
@@ -42,11 +43,6 @@ export default class Upload extends React.Component {
                 this.setState({ encodedImage });
             })
             .catch((error) => console.error(error));
-    }
-
-    componentDidMount() {
-        this.setState({ loading: false });
-
     }
 
     async uploadPicture() {
@@ -89,6 +85,13 @@ export default class Upload extends React.Component {
         })
     }
 
+    componentDidMount() {
+        if (this.props.location.state == null) {
+            this.setState({ loading: false, redirect: true });
+            return;
+        }
+    }
+
     render() {
         if (this.state.loading)
             return (
@@ -98,11 +101,7 @@ export default class Upload extends React.Component {
         else if (this.state.redirect) 
             return (
                 <Redirect to={{
-                    pathname: '/profile',
-                    state: {
-                        from: 'upload',
-                        uploadSuccess: true
-                    }
+                    pathname: '/',
                 }}/>
             )
         

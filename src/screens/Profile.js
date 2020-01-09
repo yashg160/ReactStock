@@ -1,5 +1,7 @@
 import React from 'react';
 import Cookies from 'js-cookie';
+import { Redirect } from 'react-router-dom';
+
 
 import Backdrop from '@material-ui/core/Backdrop';
 import AppBar from '@material-ui/core/AppBar';
@@ -34,13 +36,6 @@ export default class Profile extends React.Component {
         }
     }
 
-    async getUserData(token) {
-        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
-        let content = await rawResponse.json();
-
-        this.setState({ user: content.profile });
-    }
-
     async getPicturesForUser(token) {
         
         let rawResponse = await fetch(`${serverUrl}/user/pictures?accessToken=${token}`, {
@@ -59,10 +54,17 @@ export default class Profile extends React.Component {
     }
 
     componentDidMount() {
+
+        if (this.props.location.state == null) {
+            this.setState({ loading: false, redirect: true });
+            return;
+        }
+
+        this.setState({ user: this.props.location.state.user });
+
         var token = Cookies.get('TOKEN');
 
-        this.getUserData(token)
-            .then(() => this.getPicturesForUser(token))
+       this.getPicturesForUser(token)
             .then((content) => {
                 console.log(content)
                 this.setState({ pictures: content.pictures, loading: false, error: false });
@@ -78,6 +80,13 @@ export default class Profile extends React.Component {
         if (this.state.loading)
             return (
                 <Backdrop open={this.state.loading}/>
+            )
+        
+        else if (this.state.redirect)
+            return (
+                <Redirect to={{
+                    pathname: '/'
+                }} />
             )
         
         return (
