@@ -27,10 +27,17 @@ export default class Profile extends React.Component {
         this.state = {
             loading: true,
             error: false,
-            user: props.location.state.user,
+            user: null,
             pictures: null,
             mainMenu: null
         }
+    }
+
+    async getUserData(token) {
+        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
+        let content = await rawResponse.json();
+
+        this.setState({ user: content.profile });
     }
 
     async getPicturesForUser(token) {
@@ -51,12 +58,10 @@ export default class Profile extends React.Component {
     }
 
     componentDidMount() {
-
         var token = Cookies.get('TOKEN');
-        console.log(token);
 
-
-        this.getPicturesForUser(token)
+        this.getUserData(token)
+            .then(() => this.getPicturesForUser(token))
             .then((content) => {
                 console.log(content)
                 this.setState({ pictures: content.pictures, loading: false, error: false });
