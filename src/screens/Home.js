@@ -134,7 +134,7 @@ export default class Home extends React.Component {
         else if (this.state.redirect && !this.state.userCreated) 
             return (
                 <Redirect to={{
-                    pathname: '/dashboard',
+                    pathname: '/profile',
                     state:{user: this.state.user}
                 }}
                 />
