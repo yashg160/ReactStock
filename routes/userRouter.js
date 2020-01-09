@@ -124,7 +124,6 @@ userRouter.route('/pictures')
                 }
                 else {
                     var pictureIds = doc.get('pictures');
-                    console.log(pictureIds[1]);
                     let pictures = [];
 
                     for (i = 0; i < pictureIds.length; i++) {
@@ -132,6 +131,7 @@ userRouter.route('/pictures')
                         let pic = await Picture.findById(pictureIds[i]);
 
                         pictures.push({
+                            id: pictureIds[i],
                             content: pic.get('content'),
                             title: pic.get('title')
                         });                      
