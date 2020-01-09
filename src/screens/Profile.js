@@ -173,7 +173,10 @@ export default class Profile extends React.Component {
                                 
                                 <Button
                                     variant='contained'
-                                    onClick={() => this.props.history.push('/upload')}
+                                    onClick={() => this.props.history.push({
+                                        pathname: '/upload',
+                                        state: {user: this.state.user}
+                                    })}
                                 >
                                     Upload Now
                                 </Button>
