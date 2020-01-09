@@ -10,8 +10,8 @@ export default function App() {
 		<Router>
 			<Switch>
 				<Route exact path="/" component={Home} />
-				<Route exact path="/profile" component={Profile} />
-				<Route exact path="/dashboard" component={Dashboard} />
+				<Route exact path="/profile" component={(props) => <Profile props={props} />} />
+				<Route exact path="/dashboard" component={(props) => <Dashboard props={props}/>} />
 			</Switch>
 		</Router>
 	)

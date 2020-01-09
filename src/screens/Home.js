@@ -116,6 +116,7 @@ export default class Home extends React.Component {
 
 
     render() {
+        console.log(this.state);
         if (this.state.loading)
             return (
                 <Backdrop/>
@@ -123,17 +124,19 @@ export default class Home extends React.Component {
         
         else if (this.state.redirect && this.state.userCreated) 
             return (
-                <Redirect
-                    to='/profile'
-                    user={this.state.user}
+                <Redirect to={{
+                    pathname: '/profile',
+                    state:{user: this.state.user}
+                }}
                 />
             )
             
         else if (this.state.redirect && !this.state.userCreated) 
             return (
-                <Redirect
-                    to='/dashboard'
-                    user={this.state.user}
+                <Redirect to={{
+                    pathname: '/dashboard',
+                    state:{user: this.state.user}
+                }}
                 />
             )
 
