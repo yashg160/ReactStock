@@ -1,9 +1,9 @@
 # Features/Planned Tasks
 
-1. [x] **OAuth 2.0 authentication** using third party providers. For now, only Google
+1. **OAuth 2.0 authentication** using third party providers. For now, only Google :heavy_check_mark: 
 
-2. [x] Upload pictures and view other people's gallery
+2. Upload pictures :heavy_check_mark: 
 
-3. View other people's profiles
+3. Encode images as **base64** strings for fast access :heavy_check_mark: 
 
-4. [x] Encode images as **base64** strings for fast access
+4. View other people's galleries :heavy_exclamation_mark:

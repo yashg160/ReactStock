@@ -1,8 +1,10 @@
 # Reader Stock
 
-### A MERN stack based web app for people to share weird photos from around them. Crying clowns, abandoned buildings, large wicker chairs and such. There are no restrictions and users may post whatever they want, for others to see
+#### A MERN stack based web app for people to share weird photos from around them. Crying clowns, abandoned buildings, large wicker chairs and such. There are no restrictions and users may post whatever they want, for others to see
 
-#### Technical Details
+:boom: **View Branches Frontend and Backend** :boom:
+
+### Technical Details
 The app is built in **MERN Stack**. Technologies used are:
 1. MongoDB
 2. Express.js
@@ -26,10 +28,10 @@ There are two **schemas** user for the database:
 
 Both documents are stored in different collections, referencing each other through their **_id** attributes, added by MongoDB itself. 
 
-##### Authentication
+#### Authentication
 The app uses Google's **OAth2.0** Authentication API to get access to user's google account details. Once access is granted, an **access token** is used for all future interactions between the client ans the server.
 
-#### Other Details
+### Other Details
 
 This branch, **master** exists only to provide usage details about this project.
 The **Backend** and **Frontend** branches contain the Node API and the React app respectively. If you want to run the project, clone the seperate branches and run the projects seperately. Make sure to install the dependencies before running using `yarn install` or by `npm install`.
@@ -37,4 +39,4 @@ The **Backend** and **Frontend** branches contain the Node API and the React app
 Also make sure you have MongoDB up and running. 
 
 #### Screenshots
-Coming Soon!
+:boom: Coming Soon! :boom:
