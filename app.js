@@ -1,22 +1,27 @@
-var createError = require('http-errors');
+var bodyParser = require('body-parser');
+var cors = require('cors');
 var express = require('express');
-var path = require('path');
-var logger = require('morgan');
 var mongoose = require('mongoose');
 
 var config = require('./config');
 
+var userRouter = require('./routes/userRouter');
+
 var app = express();
 
-const connect = mongoose.connect(config.mongoUrl);
 
-connect.then(db => {
-    console.log('Connected to server correctly');
-    },
-    err => console.error(err));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(cors());
+
+mongoose.connect(config.mongoUrl)
+    .then((db) => console.log('Connected to server'))
+    .catch((err) => console.error('Failed to connect to server ', err));
+
+app.use('/user', userRouter);
 
 app.all('/', (req, res, next) => {
-    res.send({ message: 'Congratulations! Server is working as expected.' });
+    res.send({ message: 'This route is after /user. Create an endpoint.' });
 })
 
 module.exports = app;
