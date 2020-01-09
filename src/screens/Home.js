@@ -1,12 +1,17 @@
 import React from 'react';
+import Cookies from 'js-cookie';
+import { Redirect } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import FacebookIcon from '@material-ui/icons/Facebook';
+import Backdrop from '@material-ui/core/Backdrop';
 
 import { GoogleLogin } from 'react-google-login';
 
 import backgroundImage from '../resources/home-background.png';
+import serverUrl from '../resources/config';
+
 
 export default class Home extends React.Component {
 
@@ -14,20 +19,124 @@ export default class Home extends React.Component {
         super(props);
 
         this.state = {
-
+            loading: false,
+            error: false,
+            redirect: false,
+            user: null,
+            userCreated: false
         }
+    }
+
+    async attemptLogin(token) {
+        console.log(token);
+
+        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
+
+        let content = rawResponse = await rawResponse.json();
+        console.log(content);
+        if (content.error) {
+            throw Error(content.statusMessage);
+        }
+
+        return content;
+    }
+
+    async loginUser(response) {
+        var profile = response.profileObj;
+        var accessToken = response.tokenObj.access_token;
+
+        const body = JSON.stringify({
+            googleId: profile.googleId,
+            name: {
+                given: profile.givenName,
+                family: profile.familyName
+            },
+            imageUrl: profile.imageUrl,
+            email: profile.email,
+            accessToken: accessToken
+        });
+
+        let rawResponse = await fetch(`${serverUrl}/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: body,
+        });
+
+        let content = await rawResponse.json();
+
+        if (content.error) {
+            throw Error(content.statusMessage);
+        }
+
+        Cookies.set('TOKEN', content.accessToken);
+        this.setState({ userCreated: content.userCreated });
+
+        return content.accessToken;
     }
 
     handleLoginSuccess(response) {
         console.log(response);
+        this.setState({ loading: true });
+
+        this.loginUser(response)
+            .then((token) => this.attemptLogin(token))
+            .then((content) => {
+                console.log(content);
+                this.setState({ redirect: true, loading: false, user: content.profile})
+            })
+            .catch((error) => {
+                console.error(error);
+                this.setState({ redirect: false, error: true, loading: false });
+        })
     }
 
     handleLoginFailure(response) {
         console.log(response);
     }
 
+    componentDidMount() {
+        
+        const token = Cookies.get('TOKEN');
+
+        this.attemptLogin(token)
+            .then((content) => {
+                if (content.error) 
+                    throw Error(content.errorMessage);
+                else
+                    this.setState({ redirect: true, user: content.profile });
+            })
+            .catch((error) => {
+                console.error(error);
+                this.setState({ error: true, loading: false, redirect: false });
+            });
+    }
+
 
     render() {
+        if (this.state.loading)
+            return (
+                <Backdrop/>
+            )
+        
+        else if (this.state.redirect && this.state.userCreated) 
+            return (
+                <Redirect
+                    to='/profile'
+                    user={this.state.user}
+                />
+            )
+            
+        else if (this.state.redirect && !this.state.userCreated) 
+            return (
+                <Redirect
+                    to='/dashboard'
+                    user={this.state.user}
+                />
+            )
+
         return (
             <div style={{
                 backgroundImage: `url(${backgroundImage})`,
@@ -114,7 +223,7 @@ export default class Home extends React.Component {
 
                     <Button
                         variant='contained'
-                        startIcon={<FacebookIcon fontSize='32px'/>}
+                        startIcon={<FacebookIcon/>}
                         style={{
                             textTransform: 'none',
                             padding: '12px',
