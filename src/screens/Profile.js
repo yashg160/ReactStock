@@ -15,6 +15,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
 
 import serverUrl from '../resources/config';
 
@@ -170,6 +171,13 @@ export default class Profile extends React.Component {
                     {
                         this.state.pictures.length == 0 ? 
                             <div>
+
+                                <Typography variant='h5' align='center' style={{
+                                    marginTop: '40px'
+                                }}>
+                                    Gallery
+                                </Typography>
+
                                 <Typography variant='body1' align='center' style={{
                                     marginTop: '40px'
                                 }}>
@@ -188,7 +196,49 @@ export default class Profile extends React.Component {
                             </div>
                             
                             :
-                            <p>some pitures</p>
+                            <div>
+
+                                <Typography variant='h5' align='center' style={{
+                                    marginTop: '40px'
+                                }}>
+                                    Gallery
+                                </Typography>
+
+                                <div style={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'space-around',
+                                    overflow: 'hidden'
+                                }}>
+                                    <GridList
+                                        cellHeight={300}
+                                        style={{
+                                            width: '75%',
+                                            height: '100%'
+                                        }}
+                                    >
+
+                                        {
+                                            this.state.pictures.map((picture) => (
+                                                <GridListTile key={picture.id}>
+                                                    <img src={picture.content} alt={picture.title} />
+                                                    <GridListTileBar
+                                                        title={picture.title}
+                                                        subtitle={<span>by: {`${this.state.user.givenName} ${this.state.user.familyName}`}</span>}
+                                                        actionIcon={
+                                                            <IconButton aria-label={`info about ${picture.title}`} >
+                                                                <InfoIcon />
+                                                            </IconButton>
+                                                        }
+                                                    />
+                                                </GridListTile>
+                                            ))
+                                        }
+                                    </GridList>
+                                </div>
+                
+
+                            </div>
                     }
 
                 </div>
