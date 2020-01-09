@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var User = require('../models/User');
+var Picture = require('../models/Picture');
 
 var userRouter = express.Router();
 userRouter.use(bodyParser.json());
@@ -109,6 +110,47 @@ userRouter.route('/login')
                     }
                 }
             });
+    });
+
+userRouter.route('/pictures')
+    .get((req, res, next) => {
+        var query = req.query;
+
+        User.findOne({
+            accessToken: query.accessToken
+        }, (err, doc) => {
+                if (err) {
+                    res.status(200);
+                    res.send({ error: true, errorMessage: 'ERR_USER_PICTURES' });
+                }
+                else {
+                    var pictureIds = doc.get('pictures');
+                    let pictures = [];
+
+                    for (i = 0; i < pictureIds.length; i++) {
+
+                        Picture.findById(pictureIds[i], (err, pic) => {
+                            if (!err) {
+                                pictures.push({
+                                    content: pic.get('content'),
+                                    title: pic.get('title')
+                                });
+                            }
+                            else {
+                                res.status(200);
+                                res.send({error: true, errorMessage: 'ERR_PICTURE'})
+                            }
+                        });
+                    }
+
+                    res.status(200);
+                    res.send({
+                        error: false,
+                        errorMessage: 'ERR_NONE',
+                        pictures: pictures
+                    });
+                }
+        })
     });
 
 module.exports = userRouter;
