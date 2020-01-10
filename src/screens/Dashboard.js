@@ -35,6 +35,20 @@ export default class Dashboard extends React.Component {
 
     }
 
+    async getUser(token) {
+        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
+        let content = await rawResponse.json();
+
+        console.log(content);
+
+        if (content.error)
+            throw Error(content.errorMessage);
+
+        this.setState({ user: content.profile });
+
+        return;
+    }
+
     handleLogout() {
         Cookies.remove('TOKEN');
 
@@ -50,6 +64,7 @@ export default class Dashboard extends React.Component {
         });
 
         let content = await rawResponse.json();
+        console.log(content);
         if (content.error)
             throw Error(content.errorMessage)
 
@@ -58,22 +73,21 @@ export default class Dashboard extends React.Component {
 
     componentDidMount() {
 
-        if (this.props.location.state == null) {
+        var token = Cookies.get('TOKEN');
+        if (token != null) {
+            
+            this.getUser(token)
+                .then(() => this.getPictures())
+                .then((content) => this.setState({ pictures: content.pictures, loading: false, error: false }))
+                .catch((error) => {
+                    console.error(error);
+                    this.setState({ loading: false, error: true });
+            })
+        }
+        else {
             this.setState({ loading: false, redirect: true });
-            return;
         }
 
-        this.setState({ user: this.props.location.state.user });
-
-        this.getPictures()
-            .then((content) => {
-                console.log(content);
-                this.setState({ pictures: content.pictures, loading: false, error: false })
-            })
-            .catch((error) => {
-                console.error(error);
-                this.setState({ loading: false, error: true });
-            })
     }
     
     render() {
@@ -181,6 +195,12 @@ export default class Dashboard extends React.Component {
                                 </Typography>
                             </Grid>
                         </Grid>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/upload')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            New Picture
+                        </Typography>
                     </MenuItem>
 
                     <MenuItem style={{ padding: 16 }}>

@@ -19,6 +19,9 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import serverUrl from '../resources/config';
 
 
@@ -34,6 +37,12 @@ export default class Profile extends React.Component {
             pictures: null,
             mainMenu: null
         }
+    }
+
+    handleLogout() {
+        Cookies.remove('TOKEN');
+
+        this.props.history.push('/');
     }
 
     async getUser(token) {
@@ -178,8 +187,7 @@ export default class Profile extends React.Component {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
+                    alignItems: 'center'}}>
                     <Typography variant='h5' align='center'>
                         Pictures
                     </Typography>
@@ -258,6 +266,55 @@ export default class Profile extends React.Component {
                     }
 
                 </div>
+
+                <Menu
+                    id='main-menu'
+                    anchorEl={this.state.mainMenu}
+                    keepMounted
+                    open={Boolean(this.state.mainMenu)}
+                    onClose={() => this.setState({ mainMenu: false })}>
+
+                    <MenuItem>
+                        <Grid container direction='row' spacing={4}>
+                            <Grid item container justify='center' alignItems='center'>
+                                <Avatar
+                                    src={this.state.user.imageUrl}
+                                    variant='circle'
+                                    style={{ height: '64px', width: '64px' }} />
+                            </Grid>
+
+                            <Grid container item justify='center' alignItems='center'>
+                                <Typography variant='body1' align='center' style={{ fontSize: 24 }}>
+                                    {`${this.state.user.givenName} ${this.state.user.familyName}`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/upload')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            New Picture
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/dashboard')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Dashboard
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/profile')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Profile
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.handleLogout()} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Sign Out
+                        </Typography>
+                    </MenuItem>
+                </Menu>
 
             </div>
         )
