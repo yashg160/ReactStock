@@ -10,6 +10,26 @@ pictureRouter.use(bodyParser.json());
 pictureRouter.route('/')
     .get((req, res, next) => {
 
+        var num = req.query.num;
+
+        Picture.aggregate([{ $sample: { size: num } }])
+            .then((pictures) => {
+                res.status(200);
+                res.send({
+                    error: false,
+                    errorMessage: 'ERR_NONE',
+                    pictures: pictures
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+                res.status(200);
+                res.send({
+                    error: false,
+                    errorMessage: 'ERR_PICTURES'
+                })
+            });
+
     })
     .post((req, res, next) => {
         const accessToken = req.query.accessToken;
@@ -36,12 +56,27 @@ pictureRouter.route('/')
                             });
                         }
                         else {
-                            console.log(doc);
-                            res.status(200);
-                            res.send({ 
-                                error: false,
-                                errorMessage: 'ERR_NONE'
+                            Picture.updateOne({
+                                pictureId: pictureId
+                            }, {
+                                uploader: doc.get('_id')
                             })
+                                .then((result) => {
+                                    res.status(200);
+                                    res.send({
+                                        error: false,
+                                        errorMessage: 'ERR_NONE'
+                                    })
+                                })
+                                .catch((error) => {
+                                    console.error(error);
+                                    res.status(200);
+                                    res.send({
+                                        error: true,
+                                        errorMessage: 'ERR_INSERT_PIC_UPLOADER'
+                                    });
+                            })
+                            
                         }
                 })
 
