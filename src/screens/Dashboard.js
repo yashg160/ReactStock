@@ -10,6 +10,10 @@ import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
+
+import { ThemeProvider } from '@material-ui/styles';
+import theme from '../resources/theme';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -106,123 +110,134 @@ export default class Dashboard extends React.Component {
             )
         
         return (
-            <div>
+            <ThemeProvider theme={theme}>
+                <div>
 
-                <AppBar position="sticky" style={{ backgroundColor: 'white' }}>
-                    <Toolbar style={{ paddingLeft: 80, paddingRight: 80 }}>
+                    <AppBar position="sticky" style={{ backgroundColor: 'white' }}>
+                        <Toolbar style={{ paddingLeft: 80, paddingRight: 80 }}>
 
-                        <Typography variant="h5" style={{ flex: 1, color: 'black' }}>
-                            <Link color='inherit' onClick={() => this.props.history.push('/')}>
-                                ReactStock
+                            <Typography variant="h5" style={{ flex: 1, color: 'black' }}>
+                                <Link color='inherit' onClick={() => this.props.history.push('/')}>
+                                    ReactStock
                             </Link>
-                        </Typography>
+                            </Typography>
 
-                        <Avatar
-                            src={this.state.user.imageUrl}
-                            variant='circle'
-                            style={{ height: '40px', width: '40px' }}
-                            onClick={(event) => this.setState({ mainMenu: event.currentTarget })}
-                        />
+                            <Avatar
+                                src={this.state.user.imageUrl}
+                                variant='circle'
+                                style={{ height: '40px', width: '40px' }}
+                                onClick={(event) => this.setState({ mainMenu: event.currentTarget })}
+                            />
 
-                    </Toolbar>
-                </AppBar>
+                        </Toolbar>
+                    </AppBar>
 
-                <Typography variant='h5' style={{
-                    marginLeft: '80px',
-                    marginTop: '80px'
-                }}>
-                    Dashboard
-                </Typography>
+                    <Typography variant='h4' style={{
+                        marginLeft: '80px',
+                        marginTop: '80px'
+                    }}>
+                        Dashboard
+                    </Typography>
 
-                <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    marginTop: '32px'
-                }}>
-                    <GridList
+                    <Divider variant='middle'
                         style={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
+                            height: '4px',
+                            marginTop: '12px',
+                            backgroundColor: '#af0404'
+                        }} />
 
-                        {
-                            this.state.pictures.map((picture) => (
-                                <GridListTile
-                                    key={picture._id}
-                                    style={{
-                                        height: '400px',
-                                        width: '45%',
-                                        margin: '20px',
-                                }}>
-                                    <img src={picture.content} alt={picture.title} />
-                                    <GridListTileBar
-                                        title={picture.title}
-                                        subtitle={<span>by: {`${this.state.user.givenName} ${this.state.user.familyName}`}</span>}
-                                        
-                                    />
-                                </GridListTile>
-                            ))
-                        }
-                    </GridList>
+                    <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        overflow: 'hidden',
+                        marginTop: '40px'
+                    }}>
+                        <GridList
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+
+                            {
+                                this.state.pictures.map((picture) => (
+                                    <GridListTile
+                                        key={picture._id}
+                                        style={{
+                                            height: '400px',
+                                            width: '45%',
+                                            margin: '20px',
+                                        }}>
+                                        <img src={picture.content} alt={picture.title} />
+                                        <GridListTileBar
+                                            title={picture.title}
+                                            subtitle={<span>by: {`${this.state.user.givenName} ${this.state.user.familyName}`}</span>}
+
+                                        />
+                                    </GridListTile>
+                                ))
+                            }
+                        </GridList>
+                    </div>
+
+                    <Menu
+                        id='main-menu'
+                        anchorEl={this.state.mainMenu}
+                        keepMounted
+                        open={Boolean(this.state.mainMenu)}
+                        onClose={() => this.setState({ mainMenu: false })}>
+
+                        <MenuItem>
+                            <Grid container direction='row' spacing={4}>
+                                <Grid item container justify='center' alignItems='center'>
+                                    <Avatar
+                                        src={this.state.user.imageUrl}
+                                        variant='circle'
+                                        style={{ height: '64px', width: '64px' }} />
+                                </Grid>
+
+                                <Grid container item justify='center' alignItems='center'>
+                                    <Typography variant='body1' align='center' style={{ fontSize: 24 }}>
+                                        {`${this.state.user.givenName} ${this.state.user.familyName}`}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </MenuItem>
+
+                        <MenuItem
+                            onClick={() => this.props.history.push('/upload')}
+                            style={{ padding: 16, backgroundColor: '#af0404' }} >
+                            <Typography variant='body1' align='center' style={{color: 'white'}}>
+                                New Picture
+                            </Typography>
+                        </MenuItem>
+
+                        <MenuItem style={{ padding: 16 }}>
+                            <Typography variant='body1' align='center'>
+                                Dashboard
+                        </Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={() => this.props.history.push('/profile')} style={{ padding: 16 }}>
+                            <Typography variant='body1' align='center'>
+                                Profile
+                        </Typography>
+                        </MenuItem>
+
+                        <MenuItem onClick={() => this.handleLogout()} style={{ padding: 16 }}>
+                            <Typography variant='body1' align='center'>
+                                Sign Out
+                        </Typography>
+                        </MenuItem>
+                    </Menu>
+
                 </div>
-                
-                <Menu
-                    id='main-menu'
-                    anchorEl={this.state.mainMenu}
-                    keepMounted
-                    open={Boolean(this.state.mainMenu)}
-                    onClose={() => this.setState({ mainMenu: false })}>
-
-                    <MenuItem>
-                        <Grid container direction='row' spacing={4}>
-                            <Grid item container justify='center' alignItems='center'>
-                                <Avatar
-                                    src={this.state.user.imageUrl}
-                                    variant='circle'
-                                    style={{ height: '64px', width: '64px' }} />
-                            </Grid>
-
-                            <Grid container item justify='center' alignItems='center'>
-                                <Typography variant='body1' align='center' style={{ fontSize: 24 }}>
-                                    {`${this.state.user.givenName} ${this.state.user.familyName}`}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </MenuItem>
-
-                    <MenuItem onClick={() => this.props.history.push('/upload')} style={{ padding: 16 }}>
-                        <Typography variant='body1' align='center'>
-                            New Picture
-                        </Typography>
-                    </MenuItem>
-
-                    <MenuItem style={{ padding: 16 }}>
-                        <Typography variant='body1' align='center'>
-                            Dashboard
-                        </Typography>
-                    </MenuItem>
-
-                    <MenuItem onClick={() => this.props.history.push('/profile')} style={{ padding: 16 }}>
-                        <Typography variant='body1' align='center'>
-                            Profile
-                        </Typography>
-                    </MenuItem>
-
-                    <MenuItem onClick={() => this.handleLogout()} style={{ padding: 16 }}>
-                        <Typography variant='body1' align='center'>
-                            Sign Out
-                        </Typography>
-                    </MenuItem>
-                </Menu>
-
-            </div>
+            </ThemeProvider>
+            
         )
     }
 }
