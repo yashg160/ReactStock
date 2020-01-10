@@ -34,6 +34,20 @@ export default class Upload extends React.Component {
         this.imageInput = null;
     }
 
+    async getUser(token) {
+        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
+        let content = await rawResponse.json();
+
+        console.log(content);
+
+        if (content.error)
+            throw Error(content.errorMessage);
+
+        this.setState({ user: content.profile });
+
+        return;
+    }
+
     imageSelectHandler = event => {
 
         console.log(event.target.files[0]);
@@ -86,10 +100,21 @@ export default class Upload extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.location.state == null) {
-            this.setState({ loading: false, redirect: true });
-            return;
+
+        var token = Cookies.get('TOKEN');
+        if (token != null) {
+            
+            this.getUser(token)
+                .then(() => this.setState({ loading: false, error: false, redirect: false }))
+                .catch((error) => {
+                    console.error(error);
+                    this.setState({ error: true, loading: false, redirect: false });
+            })
         }
+        else {
+            this.setState({ loading: false, redirect: true });
+        }
+        
     }
 
     render() {
