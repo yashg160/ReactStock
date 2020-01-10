@@ -11,6 +11,10 @@ import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 import serverUrl from '../resources/config';
@@ -46,6 +50,12 @@ export default class Upload extends React.Component {
         this.setState({ user: content.profile });
 
         return;
+    }
+
+    handleLogout() {
+        Cookies.remove('TOKEN');
+
+        this.props.history.push('/');
     }
 
     imageSelectHandler = event => {
@@ -210,6 +220,55 @@ export default class Upload extends React.Component {
                             </Button>
                         </div>
                 }
+
+                <Menu
+                    id='main-menu'
+                    anchorEl={this.state.mainMenu}
+                    keepMounted
+                    open={Boolean(this.state.mainMenu)}
+                    onClose={() => this.setState({ mainMenu: false })}>
+
+                    <MenuItem>
+                        <Grid container direction='row' spacing={4}>
+                            <Grid item container justify='center' alignItems='center'>
+                                <Avatar
+                                    src={this.state.user.imageUrl}
+                                    variant='circle'
+                                    style={{ height: '64px', width: '64px' }} />
+                            </Grid>
+
+                            <Grid container item justify='center' alignItems='center'>
+                                <Typography variant='body1' align='center' style={{ fontSize: 24 }}>
+                                    {`${this.state.user.givenName} ${this.state.user.familyName}`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/upload')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            New Picture
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/dashboard')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Dashboard
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.props.history.push('/profile')} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Profile
+                        </Typography>
+                    </MenuItem>
+
+                    <MenuItem onClick={() => this.handleLogout()} style={{ padding: 16 }}>
+                        <Typography variant='body1' align='center'>
+                            Sign Out
+                        </Typography>
+                    </MenuItem>
+                </Menu>
                 
             </div>
         )
