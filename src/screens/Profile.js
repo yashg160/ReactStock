@@ -36,6 +36,20 @@ export default class Profile extends React.Component {
         }
     }
 
+    async getUser(token) {
+        let rawResponse = await fetch(`${serverUrl}/user/login?accessToken=${token}`);
+        let content = await rawResponse.json();
+
+        console.log(content);
+
+        if (content.error)
+            throw Error(content.errorMessage);
+        
+        this.setState({ user: content.profile });
+        
+        return;
+    }
+
     async getPicturesForUser(token) {
         
         let rawResponse = await fetch(`${serverUrl}/user/pictures?accessToken=${token}`, {
@@ -46,7 +60,7 @@ export default class Profile extends React.Component {
         });
 
         let content = await rawResponse.json();
-
+        console.log(content);
         if (content.error)
             throw Error(content.errorMessage);
         
@@ -55,24 +69,17 @@ export default class Profile extends React.Component {
 
     componentDidMount() {
 
-        if (this.props.location.state == null) {
-            this.setState({ loading: false, redirect: true });
-            return;
-        }
-
-        this.setState({ user: this.props.location.state.user });
-
         var token = Cookies.get('TOKEN');
+        if (token != null) {
 
-       this.getPicturesForUser(token)
-            .then((content) => {
-                console.log(content)
-                this.setState({ pictures: content.pictures, loading: false, error: false });
-            })
-            .catch((error) => {
-                console.error(error);
-                this.setState({ loading: false, error: true });
-        })
+            this.getUser(token)
+                .then(() => this.getPicturesForUser(token))
+                .then((content) => this.setState({ pictures: content.pictures, loading: false, error: false }))
+                .catch((error) => {
+                    console.error(error);
+                    this.setState({ loading: false, error: true });
+                });
+        }
 
     }
 
