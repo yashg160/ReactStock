@@ -17,3 +17,5 @@ Based on MERN Stack, this Backend provides the following routes:
 6. :x: /picture/:pictureId: GET - Get a picture by its id
 
 7. :x: /picture/:pictureId: DELETE - Delete a picture by its id
+
+To run the app, clone this repo and then in the directory, run `yarn install` and then run `yarn start`
