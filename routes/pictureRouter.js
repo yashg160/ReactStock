@@ -11,6 +11,7 @@ pictureRouter.route('/')
     .get((req, res, next) => {
 
         var num = req.query.num;
+        num = parseInt(num, 10);
 
         Picture.aggregate([{ $sample: { size: num } }])
             .then((pictures) => {
@@ -25,7 +26,7 @@ pictureRouter.route('/')
                 console.error(error);
                 res.status(200);
                 res.send({
-                    error: false,
+                    error: true,
                     errorMessage: 'ERR_PICTURES'
                 })
             });
