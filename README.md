@@ -39,4 +39,13 @@ The **Backend** and **Frontend** branches contain the Node API and the React app
 Also make sure you have MongoDB up and running. 
 
 #### Screenshots
-:boom: Coming Soon! :boom:
+![Home Screen](Screenshots/Home.jpg)
+
+
+![Dashboard](Screenshots/Dashboard.jpg)
+
+
+![Profile Screen](Screenshots/Profile.jpg)
+
+
+![Upload Screen](Screenshots/Upload.jpg)
