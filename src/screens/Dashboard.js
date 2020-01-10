@@ -13,13 +13,14 @@ export default class Dashboard extends React.Component {
         this.state = {
             redirect: false,
             loading: true,
-            user: null
+            user: null,
+            pictures: null
         }
 
     }
 
     async getPictures() {
-        const rawResponse = await fetch(`${serverUrl}/picture`, {
+        let rawResponse = await fetch(`${serverUrl}/picture?num=10`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -27,7 +28,6 @@ export default class Dashboard extends React.Component {
         });
 
         let content = await rawResponse.json();
-        console.log(content);
         if (content.error)
             throw Error(content.errorMessage)
 
@@ -35,17 +35,18 @@ export default class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
 
         if (this.props.location.state == null) {
             this.setState({ loading: false, redirect: true });
             return;
         }
 
+        this.setState({ user: this.props.location.state.user });
+
         this.getPictures()
-            .then((pictures) => {
-                console.log(pictures)
-                this.setState({ pictures, loading: false, error: false })
+            .then((content) => {
+                console.log(content);
+                this.setState({ pictures: content.pictures, loading: false, error: false })
             })
             .catch((error) => {
                 console.error(error);
@@ -55,9 +56,11 @@ export default class Dashboard extends React.Component {
     
     render() {
         if (this.state.loading)
-            return <Backdrop
-                open={this.state.loading}
-            />
+            return (
+                <Backdrop
+                    open={this.state.loading}
+                />
+            )
         
         else if (this.state.redirect)
             return (
