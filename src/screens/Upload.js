@@ -12,6 +12,9 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../resources/theme';
@@ -33,6 +36,7 @@ export default class Upload extends React.Component {
             loading: true,
             redirect: false,
             error: false,
+            errorMessage: '',
             user: null,
             encodedImage: '',
             title: ''
@@ -72,6 +76,11 @@ export default class Upload extends React.Component {
             .catch((error) => console.error(error));
     }
 
+    async validateTitle() {
+        if (this.state.title == '')
+            throw Error('ERR_TITLE');
+    }
+
     async uploadPicture() {
         const { encodedImage, title } = this.state;
         const accessToken = Cookies.get('TOKEN');
@@ -101,14 +110,20 @@ export default class Upload extends React.Component {
 
         this.setState({ loading: true, error: false });
 
-        this.uploadPicture()
+        this.validateTitle()
+            .then(() => this.uploadPicture())
             .then((content) => {
                 console.log(content);
                 this.setState({ loading: false, redirect: true, error: false });
             })
             .catch((error) => {
                 console.error(error);
-                this.setState({ loading: false, error: true });
+                if (error.message == 'ERR_TITLE') {
+                    this.setState({ loading: false, error: true, errorMessage: 'Invalid Title' });
+                }
+                else {
+                    this.setState({ loading: false, error: true, errorMessage: 'An error occurred' });
+                }
         })
     }
 
@@ -166,28 +181,38 @@ export default class Upload extends React.Component {
                         </Toolbar>
                     </AppBar>
 
+                    <input
+                        style={{ display: 'none' }}
+                        type='file'
+                        onChange={this.imageSelectHandler}
+                        ref={imageInput => this.imageInput = imageInput}
+                    />
+
                     {
                         this.state.encodedImage === '' ?
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                            >
-                                <input
-                                    style={{ display: 'none' }}
-                                    type='file'
-                                    onChange={this.imageSelectHandler}
-                                    ref={imageInput => this.imageInput = imageInput}
-                                />
+                                justifyContent: 'center',
+                                marginTop: '80px'}}>
+
+                                <Typography variant='body1' align='center'>
+                                    No picture selected
+                                </Typography>
 
                                 <Button
                                     variant='contained'
-                                    onClick={() => this.imageInput.click()}
-                                >
+                                    style={{
+                                        textTransform: 'none',
+                                        margin: '16px',
+                                        fontSize: '20px',
+                                        borderRadius: '20px'
+                                    }}
+                                    color='primary'
+                                    onClick={() => this.imageInput.click()}>
                                     Select Image
-                            </Button>
+                                </Button>
 
                             </div>
 
@@ -198,30 +223,63 @@ export default class Upload extends React.Component {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginTop: 40
-                            }}>
+                                marginTop: '40px'}}>
 
                                 <img
                                     src={this.state.encodedImage}
                                     style={{
                                         objectFit: 'cover',
                                         width: '80%',
-                                        height: 'auto'
-                                    }}
-                                />
+                                        height: 'auto',
+                                        boxShadow: '0px 6px 6px 6px rgb(0,0,0,0.4)',
+                                        borderRadius: '16px'
+                                    }}/>
 
                                 <TextField
                                     id="standard-basic"
-                                    label="Standard"
+                                    label="A Catchy Title"
+                                    size='medium'
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '28px'
+                                        }
+                                    }}
+                                    style={{
+                                        marginTop: '24px',
+                                        marginBottom: '8px'
+                                    }}
                                     onChange={(event) => this.setState({ title: event.target.value })}
                                 />
 
                                 <Button
                                     variant='contained'
-                                    onClick={() => this.handlePictureUpload()}
-                                >
+                                    style={{
+                                        marginTop: '4px',
+                                        marginBottom: '32px',
+                                        fontSize: '24px',
+                                        textTransform: 'none',
+                                        borderRadius: '32px',
+                                        paddingLeft: '40px',
+                                        paddingRight: '40px'
+                                    }}
+                                    color='primary'
+                                    onClick={() => this.handlePictureUpload()}>
                                     Upload
-                            </Button>
+                                </Button>
+
+                                <Button
+                                    variant='contained'
+                                    style={{
+                                        marginTop: '8px',
+                                        marginBottom: '32px',
+                                        textTransform: 'none',
+                                        borderRadius: '20px'
+                                    }}
+                                    color='secondary'
+                                    onClick={() => this.imageInput.click()}>
+                                    Change Picture
+                                </Button>
+                                
                             </div>
                     }
 
@@ -276,6 +334,23 @@ export default class Upload extends React.Component {
                         </MenuItem>
                     </Menu>
 
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.error}
+                        autoHideDuration={4000}
+                        onClose={() => this.setState({ error: false})}
+                        message={this.state.errorMessage}
+                        action={
+                            <React.Fragment>
+                                <IconButton size="small" aria-label="close" onClick={() => this.setState({ error: false})}>
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </React.Fragment>
+                        }
+                    />
                 </div>
             </ThemeProvider>
     
