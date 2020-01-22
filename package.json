@@ -1,27 +1,30 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "ReactStock API with Node and Express",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
-  },
-  "author": "Yash Gupta",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "debug": "^4.1.1",
-    "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "http": "^0.0.0",
-    "http-errors": "^1.7.3",
-    "mongoose": "^4.13.20",
-    "morgan": "^1.9.1",
-    "pug": "^2.0.4"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.2"
-  }
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "ReactStock API with Node and Express",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"print-message": "echo\n\nWelcome.\nRun the scripts 'yarn start-mongo' and 'yarn start-server' in seperate terminals to get started. \nMake sure you run start-mongo before start-server.",
+		"start": "npm run print-message && exit 0",
+		"start-server": "nodemon index.js",
+		"start-mongo": "mongod --dbpath=\"F:\\Projects\\ReactStock\\mongodb\\data\\db\""
+	},
+	"author": "Yash Gupta",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"debug": "^4.1.1",
+		"express": "^4.17.1",
+		"express-session": "^1.17.0",
+		"http": "^0.0.0",
+		"http-errors": "^1.7.3",
+		"mongoose": "^4.13.20",
+		"morgan": "^1.9.1",
+		"pug": "^2.0.4"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.2"
+	}
 }
