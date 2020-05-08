@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/ReactStock/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/ReactStock/static/js/main.a5365d0d.chunk.js",
+    "main.js.map": "/ReactStock/static/js/main.a5365d0d.chunk.js.map",
+    "runtime-main.js": "/ReactStock/static/js/runtime-main.5ef5a458.js",
+    "runtime-main.js.map": "/ReactStock/static/js/runtime-main.5ef5a458.js.map",
+    "static/js/2.cc15a6e4.chunk.js": "/ReactStock/static/js/2.cc15a6e4.chunk.js",
+    "static/js/2.cc15a6e4.chunk.js.map": "/ReactStock/static/js/2.cc15a6e4.chunk.js.map",
+    "index.html": "/ReactStock/index.html",
+    "precache-manifest.69ce735d4b86bbc1fa917a1fdff8e7e6.js": "/ReactStock/precache-manifest.69ce735d4b86bbc1fa917a1fdff8e7e6.js",
+    "service-worker.js": "/ReactStock/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/ReactStock/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.cc15a6e4.chunk.js.LICENSE": "/ReactStock/static/js/2.cc15a6e4.chunk.js.LICENSE",
+    "static/media/home-background.png": "/ReactStock/static/media/home-background.dbe5ad59.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5ef5a458.js",
+    "static/js/2.cc15a6e4.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.a5365d0d.chunk.js"
+  ]
+}
