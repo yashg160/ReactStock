@@ -103,7 +103,7 @@ export default class Home extends React.Component {
     componentDidMount() {
         
         const token = Cookies.get('TOKEN');
-
+        console.log(token);
         this.attemptLogin(token)
             .then((content) => {
                 if (content.error) 
